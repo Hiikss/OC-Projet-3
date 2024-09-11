@@ -7,12 +7,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 @Table(name = "users")
@@ -23,8 +20,7 @@ import java.util.UUID;
 public class User {
 
     @Id
-    @UuidGenerator
-    private UUID id;
+    private Long id;
 
     @Column(nullable = false)
     private String name;
@@ -44,6 +40,6 @@ public class User {
     @OneToMany(mappedBy = "owner")
     private List<Rental> rentals;
 
-    @OneToMany(mappedBy = "sender")
+    @OneToMany(mappedBy = "user")
     private List<Message> messages;
 }

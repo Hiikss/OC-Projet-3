@@ -22,8 +22,7 @@ import java.util.List;
 public class Rental {
 
     @Id
-    @UuidGenerator
-    private String id;
+    private Long id;
 
     @Column
     private String name;

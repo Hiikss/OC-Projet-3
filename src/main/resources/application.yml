@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: Oc-Projet-3
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: 'ocp3'
+    password: 'ocp3'
+    url: jdbc:postgresql://localhost:5432/ocp3?charSet=UTF-8&prepareThreshold=0
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+server:
+  servlet:
+    context-path: /api
+  error:
+    include-message: always
+  port: 3001
+
+security:
+  jwt:
+    token:
+      secret-key: my-secret-key
