@@ -22,6 +22,7 @@ import java.util.List;
 public class Rental {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column

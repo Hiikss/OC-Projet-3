@@ -20,4 +20,5 @@ server:
 security:
   jwt:
     token:
-      secret-key: my-secret-key
+      secret-key: BD2749CB65D927A82B47849F2BCF2
+      expiration: 12h
