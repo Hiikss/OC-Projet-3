@@ -45,7 +45,7 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(() -> new UserException(HttpStatus.NOT_FOUND, "User not found"));
 
         if (!passwordEncoder.matches(credentials.password(), user.getPassword())) {
-            throw new UserException(HttpStatus.BAD_REQUEST, "Bad credentials");
+            throw new UserException(HttpStatus.UNAUTHORIZED, "Bad credentials");
         }
 
         return new AuthResponseDto(generateToken(user));
