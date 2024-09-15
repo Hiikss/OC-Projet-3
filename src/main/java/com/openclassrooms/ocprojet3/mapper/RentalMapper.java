@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 public interface RentalMapper {
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "picture", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "owner", ignore = true)

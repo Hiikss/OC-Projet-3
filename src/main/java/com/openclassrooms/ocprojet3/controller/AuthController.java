@@ -23,7 +23,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDto> login(@RequestBody CredentialsDto credentialsDto) {
-        log.info("[Auth Controller] Attempting to login");
+        log.info("[Auth Controller] Attempting to email");
 
         return ResponseEntity.ok(authService.login(credentialsDto));
     }

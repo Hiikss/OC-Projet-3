@@ -7,10 +7,12 @@ import com.openclassrooms.ocprojet3.dto.ResponseDto;
 import com.openclassrooms.ocprojet3.service.RentalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/rentals")
@@ -29,15 +31,15 @@ public class RentalController {
         return ResponseEntity.ok(rentalService.getRentalById(id));
     }
 
-    @PostMapping
-    public ResponseEntity<ResponseDto> createRental(@RequestBody RentalRequestDto rentalRequestDto, @AuthenticationPrincipal Jwt jwt) {
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ResponseDto> createRental(@ModelAttribute RentalRequestDto rentalRequestDto, @AuthenticationPrincipal Jwt jwt) {
         rentalService.createRental(rentalRequestDto, jwt.getSubject());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDto("Rental created !"));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ResponseDto> updateRental(@PathVariable Long id, @RequestBody RentalRequestDto rentalRequestDto, @AuthenticationPrincipal Jwt jwt) {
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ResponseDto> updateRental(@PathVariable Long id, @ModelAttribute RentalRequestDto rentalRequestDto, @AuthenticationPrincipal Jwt jwt) {
         rentalService.updateRental(id, rentalRequestDto, jwt.getSubject());
 
         return ResponseEntity.ok().body(new ResponseDto("Rental updated !"));

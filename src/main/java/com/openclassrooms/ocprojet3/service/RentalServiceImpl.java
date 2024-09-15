@@ -12,8 +12,15 @@ import com.openclassrooms.ocprojet3.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Objects;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -43,8 +50,31 @@ public class RentalServiceImpl implements RentalService {
         User user = userRepository.findByEmail(ownerEmail)
                 .orElseThrow(() -> new RentalException(HttpStatus.NOT_FOUND, "User not found"));
 
+        String fileUrl;
+        try {
+            // Generate a unique filename
+            String fileName = UUID.randomUUID().toString() + "_" + rentalRequestDto.getPicture().getOriginalFilename();
+
+            // Define the path where the file will be saved
+            Path path = Paths.get("uploads/" + fileName);
+
+            // Save the file to the server
+            Files.copy(rentalRequestDto.getPicture().getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+
+            // Generate the URL for accessing the file
+            fileUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("/uploads/")
+                    .path(fileName)
+                    .toUriString();
+
+        } catch (IOException e) {
+            throw new RentalException(HttpStatus.INTERNAL_SERVER_ERROR, "An error occured while uploading file");
+        }
+
         Rental rental = rentalMapper.toRental(rentalRequestDto);
         rental.setOwner(user);
+        rental.setPicture(fileUrl);
+
         rentalRepository.save(rental);
     }
 
@@ -62,6 +92,9 @@ public class RentalServiceImpl implements RentalService {
 
         Rental updatedRental = rentalMapper.toRental(rentalRequestDto);
         updatedRental.setId(id);
+        updatedRental.setOwner(user);
+        updatedRental.setPicture(rental.getPicture());
+        updatedRental.setCreatedAt(rental.getCreatedAt());
 
         rentalRepository.save(updatedRental);
     }

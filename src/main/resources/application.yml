@@ -11,6 +11,9 @@ spring:
       ddl-auto: update
   jackson:
     property-naming-strategy: SNAKE_CASE
+  web:
+    resources:
+      static-locations: uploads/
 
 server:
   servlet:
@@ -24,3 +27,6 @@ security:
     token:
       secret-key: BD2749CB65D927A82B47849F2BCF2
       expiration: 12h
+
+file:
+  upload-dir:

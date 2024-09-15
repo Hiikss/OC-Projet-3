@@ -1,6 +1,7 @@
 package com.openclassrooms.ocprojet3.dto;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class RentalRequestDto {
@@ -11,7 +12,7 @@ public class RentalRequestDto {
 
     private int price;
 
-    private String picture;
+    private MultipartFile picture;
 
     private String description;
 }

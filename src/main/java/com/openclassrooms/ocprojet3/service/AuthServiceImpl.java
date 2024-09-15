@@ -41,7 +41,7 @@ public class AuthServiceImpl implements AuthService {
     public AuthResponseDto login(CredentialsDto credentials) {
         log.info("[Auht Service] Login user");
 
-        User user = userRepository.findByEmail(credentials.login())
+        User user = userRepository.findByEmail(credentials.email())
                 .orElseThrow(() -> new UserException(HttpStatus.NOT_FOUND, "User not found"));
 
         if (!passwordEncoder.matches(credentials.password(), user.getPassword())) {
