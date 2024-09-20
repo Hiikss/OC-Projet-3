@@ -5,6 +5,9 @@ import com.openclassrooms.ocprojet3.dto.CredentialsDto;
 import com.openclassrooms.ocprojet3.dto.UserRequestDto;
 import com.openclassrooms.ocprojet3.dto.UserResponseDto;
 import com.openclassrooms.ocprojet3.service.AuthService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,9 +24,14 @@ public class AuthController {
 
     private final AuthService authService;
 
+    @Operation(summary = "Login")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Authentication succeed"),
+            @ApiResponse(responseCode = "401", description = "Authencation failed")
+    })
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDto> login(@RequestBody CredentialsDto credentialsDto) {
-        log.info("[Auth Controller] Attempting to email");
+        log.info("[Auth Controller] Attempting to login");
 
         return ResponseEntity.ok(authService.login(credentialsDto));
     }
@@ -37,7 +45,7 @@ public class AuthController {
 
     @GetMapping("/me")
     public ResponseEntity<UserResponseDto> getMe(@AuthenticationPrincipal Jwt jwt) {
-        log.info("[Auth Controller] Get me");
+        log.info("[Auth Controller] Get authenticated user");
 
         return ResponseEntity.ok(authService.getUserByEmail(jwt.getSubject()));
     }

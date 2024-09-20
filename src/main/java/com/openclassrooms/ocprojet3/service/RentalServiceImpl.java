@@ -8,68 +8,53 @@ import com.openclassrooms.ocprojet3.mapper.RentalMapper;
 import com.openclassrooms.ocprojet3.model.Rental;
 import com.openclassrooms.ocprojet3.model.User;
 import com.openclassrooms.ocprojet3.repository.RentalRepository;
-import com.openclassrooms.ocprojet3.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.Objects;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class RentalServiceImpl implements RentalService {
 
     private final RentalRepository rentalRepository;
 
     private final RentalMapper rentalMapper;
 
-    private final UserRepository userRepository;
+    private final UserService userService;
+
+    private final UploadService uploadService;
 
     @Override
     public RentalListResponseDto getAllRentals() {
+        log.info("[Rental Service] Get all rentals");
+
         return rentalMapper.toRentalListResponseDto(rentalRepository.findAll());
     }
 
     @Override
-    public RentalResponseDto getRentalById(Long id) {
-        Rental rental = rentalRepository.findById(id)
-                .orElseThrow(() -> new RentalException(HttpStatus.NOT_FOUND, "Rental not found"));
+    public Rental getRentalById(Long id) {
+        log.info("[Rental Service] Get rental by id {}", id);
 
-        return rentalMapper.toRentalResponseDto(rental);
+        return rentalRepository.findById(id)
+                .orElseThrow(() -> new RentalException(HttpStatus.NOT_FOUND, "Rental not found"));
+    }
+
+    @Override
+    public RentalResponseDto getRentalResponseDtoById(Long id) {
+        return rentalMapper.toRentalResponseDto(getRentalById(id));
     }
 
     @Override
     public void createRental(RentalRequestDto rentalRequestDto, String ownerEmail) {
-        User user = userRepository.findByEmail(ownerEmail)
-                .orElseThrow(() -> new RentalException(HttpStatus.NOT_FOUND, "User not found"));
+        log.info("[Rental Service] Create rental by user {}", ownerEmail);
 
-        String fileUrl;
-        try {
-            // Generate a unique filename
-            String fileName = UUID.randomUUID().toString() + "_" + rentalRequestDto.getPicture().getOriginalFilename();
+        User user = userService.getUserByEmail(ownerEmail);
 
-            // Define the path where the file will be saved
-            Path path = Paths.get("uploads/" + fileName);
-
-            // Save the file to the server
-            Files.copy(rentalRequestDto.getPicture().getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-
-            // Generate the URL for accessing the file
-            fileUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
-                    .path("/uploads/")
-                    .path(fileName)
-                    .toUriString();
-
-        } catch (IOException e) {
-            throw new RentalException(HttpStatus.INTERNAL_SERVER_ERROR, "An error occured while uploading file");
-        }
+        String fileUrl = uploadService.uploadFile(rentalRequestDto.getPicture());
 
         Rental rental = rentalMapper.toRental(rentalRequestDto);
         rental.setOwner(user);
@@ -80,14 +65,15 @@ public class RentalServiceImpl implements RentalService {
 
     @Override
     public void updateRental(Long id, RentalRequestDto rentalRequestDto, String ownerEmail) {
+        log.info("[Rental Service] Update rental {} by user {}", id, ownerEmail);
+
         Rental rental = rentalRepository.findById(id)
                 .orElseThrow(() -> new RentalException(HttpStatus.NOT_FOUND, "Rental not found"));
 
-        User user = userRepository.findByEmail(ownerEmail)
-                .orElseThrow(() -> new RentalException(HttpStatus.NOT_FOUND, "User not found"));
+        User user = userService.getUserByEmail(ownerEmail);
 
         if (!Objects.equals(user.getId(), rental.getOwner().getId())) {
-            throw new RentalException(HttpStatus.BAD_REQUEST, "Can't update a rental that you don't own");
+            throw new RentalException(HttpStatus.FORBIDDEN, "Can't update a rental that you don't own");
         }
 
         Rental updatedRental = rentalMapper.toRental(rentalRequestDto);

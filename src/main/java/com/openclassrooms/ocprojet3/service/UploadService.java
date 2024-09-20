@@ -1,10 +1,11 @@
 package com.openclassrooms.ocprojet3.service;
 
 import org.springframework.core.io.Resource;
-
-import java.io.FileNotFoundException;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface UploadService {
 
-    Resource getImageByName(String imageName);
+    String uploadFile(MultipartFile file);
+
+    Resource getUploadByName(String fileName);
 }

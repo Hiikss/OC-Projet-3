@@ -1,17 +1,12 @@
 package com.openclassrooms.ocprojet3.configuration;
 
 import com.openclassrooms.ocprojet3.dto.ErrorDto;
-import com.openclassrooms.ocprojet3.exception.MessageException;
-import com.openclassrooms.ocprojet3.exception.RentalException;
-import com.openclassrooms.ocprojet3.exception.UploadException;
-import com.openclassrooms.ocprojet3.exception.UserException;
+import com.openclassrooms.ocprojet3.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.io.FileNotFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -45,6 +40,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorDto> handleUploadException(UploadException exception) {
         return ResponseEntity
                 .status(exception.getStatus())
+                .body(ErrorDto.builder().message(exception.getMessage()).build());
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    @ResponseBody
+    public ResponseEntity<ErrorDto> handleAuthenticationException(AuthenticationException exception) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
                 .body(ErrorDto.builder().message(exception.getMessage()).build());
     }
 }

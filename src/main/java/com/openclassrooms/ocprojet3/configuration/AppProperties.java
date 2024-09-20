@@ -1,8 +1,10 @@
 package com.openclassrooms.ocprojet3.configuration;
 
+import com.openclassrooms.ocprojet3.exception.ConfigurationException;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -11,7 +13,7 @@ import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.Base64;
 
-@Component
+@Configuration
 @Getter
 public class AppProperties {
 
@@ -21,17 +23,17 @@ public class AppProperties {
     @Value("${security.jwt.token.expiration}")
     private Duration expirationDelay;
 
-    @Value("${spring.web.resources.static-locations}")
-    private String filePath;
+    @Value("${upload-dir}")
+    private String uploadDirectoryPath;
 
     @PostConstruct
-    protected void init() {
+    protected void init() throws ConfigurationException {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
 
         try {
-            Files.createDirectories(Paths.get(filePath));
+            Files.createDirectories(Paths.get(uploadDirectoryPath));
         } catch (IOException e) {
-            throw new RuntimeException("Could not create upload directory!");
+            throw new ConfigurationException("Could not create upload directory");
         }
     }
 

@@ -5,6 +5,7 @@ import com.openclassrooms.ocprojet3.dto.AuthResponseDto;
 import com.openclassrooms.ocprojet3.dto.CredentialsDto;
 import com.openclassrooms.ocprojet3.dto.UserRequestDto;
 import com.openclassrooms.ocprojet3.dto.UserResponseDto;
+import com.openclassrooms.ocprojet3.exception.AuthenticationException;
 import com.openclassrooms.ocprojet3.exception.UserException;
 import com.openclassrooms.ocprojet3.mapper.UserMapper;
 import com.openclassrooms.ocprojet3.model.User;
@@ -42,10 +43,10 @@ public class AuthServiceImpl implements AuthService {
         log.info("[Auht Service] Login user");
 
         User user = userRepository.findByEmail(credentials.email())
-                .orElseThrow(() -> new UserException(HttpStatus.NOT_FOUND, "User not found"));
+                .orElseThrow(() -> new AuthenticationException("Invalid credentials"));
 
         if (!passwordEncoder.matches(credentials.password(), user.getPassword())) {
-            throw new UserException(HttpStatus.UNAUTHORIZED, "Bad credentials");
+            throw new AuthenticationException("Invalid credentials");
         }
 
         return new AuthResponseDto(generateToken(user));
@@ -56,7 +57,7 @@ public class AuthServiceImpl implements AuthService {
         log.info("[Auht Service] Register user");
 
         if (userRepository.findByEmail(userRequestDto.getEmail()).isPresent()) {
-            throw new UserException(HttpStatus.BAD_REQUEST, "User already exists");
+            throw new UserException(HttpStatus.CONFLICT, "User already exists");
         }
 
         User user = userMapper.toUser(userRequestDto);
@@ -71,7 +72,7 @@ public class AuthServiceImpl implements AuthService {
         log.info("[Auht Service] Get current user");
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserException(HttpStatus.NOT_FOUND, "User not found"));
+                .orElseThrow(() -> new UserException(HttpStatus.NOT_FOUND, "User with email " + email + " not found"));
 
         return userMapper.toUserResponseDto(user);
     }
