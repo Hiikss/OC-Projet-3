@@ -6,14 +6,14 @@ spring:
     username: 'ocp3'
     password: 'ocp3'
     url: jdbc:postgresql://localhost:5432/ocp3?charSet=UTF-8&prepareThreshold=0
-  jpa:
-    hibernate:
-      ddl-auto: update
   jackson:
     property-naming-strategy: SNAKE_CASE
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
 
 server:
   servlet:

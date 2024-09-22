@@ -50,6 +50,6 @@ public class Rental {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @OneToMany
+    @OneToMany(mappedBy = "rental")
     private List<Message> messages;
 }
