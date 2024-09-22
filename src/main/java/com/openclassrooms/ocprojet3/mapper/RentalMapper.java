@@ -8,7 +8,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface RentalMapper {
@@ -25,11 +24,6 @@ public interface RentalMapper {
     RentalResponseDto toRentalResponseDto(Rental rental);
 
     default RentalListResponseDto toRentalListResponseDto(List<Rental> rentals) {
-        RentalListResponseDto rentalListResponseDto = new RentalListResponseDto();
-        rentalListResponseDto.setRentals(rentals.stream()
-                .map(this::toRentalResponseDto)
-                .collect(Collectors.toList()));
-
-        return rentalListResponseDto;
+        return new RentalListResponseDto((rentals.stream().map(this::toRentalResponseDto)).toList());
     }
 }

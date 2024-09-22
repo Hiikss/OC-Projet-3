@@ -16,7 +16,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorDto> handleUserException(UserException exception) {
         return ResponseEntity
                 .status(exception.getStatus())
-                .body(ErrorDto.builder().message(exception.getMessage()).build());
+                .body(new ErrorDto(exception.getMessage()));
     }
 
     @ExceptionHandler(RentalException.class)
@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorDto> handleRentalException(RentalException exception) {
         return ResponseEntity
                 .status(exception.getStatus())
-                .body(ErrorDto.builder().message(exception.getMessage()).build());
+                .body(new ErrorDto(exception.getMessage()));
     }
 
     @ExceptionHandler(MessageException.class)
@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorDto> handleMessageException(MessageException exception) {
         return ResponseEntity
                 .status(exception.getStatus())
-                .body(ErrorDto.builder().message(exception.getMessage()).build());
+                .body(new ErrorDto(exception.getMessage()));
     }
 
     @ExceptionHandler(UploadException.class)
@@ -40,7 +40,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorDto> handleUploadException(UploadException exception) {
         return ResponseEntity
                 .status(exception.getStatus())
-                .body(ErrorDto.builder().message(exception.getMessage()).build());
+                .body(new ErrorDto(exception.getMessage()));
     }
 
     @ExceptionHandler(AuthenticationException.class)
@@ -48,6 +48,6 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorDto> handleAuthenticationException(AuthenticationException exception) {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
-                .body(ErrorDto.builder().message(exception.getMessage()).build());
+                .body(new ErrorDto(exception.getMessage()));
     }
 }

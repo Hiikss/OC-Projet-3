@@ -1,13 +1,16 @@
 package com.openclassrooms.ocprojet3.dto;
 
-import lombok.Data;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@Data
-public class MessageRequestDto {
+@Schema(description = "Message request data")
+public record MessageRequestDto(
 
-    private String message;
+        @Schema(description = "The content of the message", example = "Lorem ipsum dolor sit amet.")
+        String message,
 
-    private Long userId;
+        @Schema(description = "The author id", example = "1")
+        Long userId,
 
-    private Long rentalId;
+        @Schema(description = "The rental id", example = "1")
+        Long rentalId) {
 }

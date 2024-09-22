@@ -27,9 +27,9 @@ public class MessageServiceImpl implements MessageService {
     public void createMessage(MessageRequestDto messageRequestDto) {
         log.info("[Message Service] Creating new message");
 
-        User user = userService.getUserById(messageRequestDto.getUserId());
+        User user = userService.getUserById(messageRequestDto.userId());
 
-        Rental rental = rentalService.getRentalById(messageRequestDto.getRentalId());
+        Rental rental = rentalService.getRentalById(messageRequestDto.rentalId());
 
         Message message = messageMapper.toMessage(messageRequestDto);
         message.setUser(user);

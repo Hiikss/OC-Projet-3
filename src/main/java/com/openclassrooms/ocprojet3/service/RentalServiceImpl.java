@@ -54,7 +54,7 @@ public class RentalServiceImpl implements RentalService {
 
         User user = userService.getUserByEmail(ownerEmail);
 
-        String fileUrl = uploadService.uploadFile(rentalRequestDto.getPicture());
+        String fileUrl = uploadService.uploadFile(rentalRequestDto.picture());
 
         Rental rental = rentalMapper.toRental(rentalRequestDto);
         rental.setOwner(user);

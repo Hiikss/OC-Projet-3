@@ -56,12 +56,12 @@ public class AuthServiceImpl implements AuthService {
     public AuthResponseDto register(UserRequestDto userRequestDto) {
         log.info("[Auht Service] Register user");
 
-        if (userRepository.findByEmail(userRequestDto.getEmail()).isPresent()) {
+        if (userRepository.findByEmail(userRequestDto.email()).isPresent()) {
             throw new UserException(HttpStatus.CONFLICT, "User already exists");
         }
 
         User user = userMapper.toUser(userRequestDto);
-        user.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
+        user.setPassword(passwordEncoder.encode(userRequestDto.password()));
 
         userRepository.save(user);
         return new AuthResponseDto(generateToken(user));

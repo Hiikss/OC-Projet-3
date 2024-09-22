@@ -1,11 +1,12 @@
 package com.openclassrooms.ocprojet3.dto;
 
-import lombok.Data;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.List;
 
-@Data
-public class RentalListResponseDto {
+@Schema(description = "Rental list response data")
+public record RentalListResponseDto(
 
-    private List<RentalResponseDto> rentals;
+        @Schema(description = "The rental list")
+        List<RentalResponseDto> rentals) {
 }
