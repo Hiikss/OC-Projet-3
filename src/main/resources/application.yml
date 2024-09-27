@@ -4,7 +4,7 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     username: 'ocp3'
-    password: 'ocp3'
+    password: ${POSTGRES_PASSWORD}
     url: jdbc:postgresql://localhost:5432/ocp3?charSet=UTF-8&prepareThreshold=0
   jackson:
     property-naming-strategy: SNAKE_CASE
@@ -22,7 +22,7 @@ server:
 security:
   jwt:
     token:
-      secret-key: BD2749CB65D927A82B47849F2BCF2
+      secret-key: ${JWT_KEY}
       expiration: 12h
 
-upload-dir: uploads/
+upload-dir: src/main/resources/static/uploads/

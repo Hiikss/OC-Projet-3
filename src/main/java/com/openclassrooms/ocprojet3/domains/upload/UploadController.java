@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,7 +25,7 @@ public class UploadController {
 
     @Operation(summary = "Get image by name", description = "Retrieve image by its name")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Image successfully retrieved"),
+            @ApiResponse(responseCode = "200", description = "Image successfully retrieved", content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE, schema = @Schema(type = "string", format = "binary"))),
             @ApiResponse(responseCode = "401", description = "User not authenticated", content = @Content(schema = @Schema(implementation = ErrorDto.class))),
             @ApiResponse(responseCode = "404", description = "Image not found", content = @Content(schema = @Schema(implementation = ErrorDto.class)))
     })

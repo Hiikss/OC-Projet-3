@@ -14,7 +14,11 @@ Use the file `script.sql` in the resources folder to create the database, the us
 
 ## Run the project
 
-Compile the project with maven and run it. The application will be running on `localhost:3001`.
+Run the project with you IDE or with Maven.
+Set the environment variable for the postgres password (ocp3) and jwt key (BD2749CB65D927A82B47849F2BCF2)
+With Maven compile the project with `mvn compile` and run it with `mvn spring-boot:run -Dspring-boot.run.arguments="--POSTGRES_PASSWORD=ocp3 --JWT_KEY=BD2749CB65D927A82B47849F2BCF2"`
+
+The application will be running on `localhost:3001`.
 
 ## Project architecture
 
